@@ -77,7 +77,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(10)),
                     child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .loginWithGoogle();
+                        },
                         child: Row(
                           children: [
                             SizedBox(
@@ -90,7 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               width: 10,
                             ),
                             Text(
-                              "Login in with facebook",
+                              "Login in with google",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )
                           ],

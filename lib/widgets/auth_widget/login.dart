@@ -80,10 +80,8 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                         borderRadius: BorderRadius.circular(10)),
                     child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => InvestmentScreen()));
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .loginWithGoogle();
                         },
                         child: Row(
                           children: [

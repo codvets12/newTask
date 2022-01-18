@@ -24,12 +24,14 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:new_project1/Routes/routes.dart';
 import 'package:new_project1/network/network.dart';
 import 'package:new_project1/widgets/auth_widget/login.dart';
 
 class AuthProvider with ChangeNotifier {
   final firebaseAuth = Network();
+  final googleSignIn = GoogleSignIn();
   int _selectedIndex = 0;
   int selectedindex = 0;
   //int _currentIndex = 0;
@@ -80,5 +82,21 @@ class AuthProvider with ChangeNotifier {
     FirebaseAuth.instance.signOut();
     Navigator.pushNamedAndRemoveUntil(
         context, Routes.authenticationscreen, (route) => false);
+  }
+
+  Future<void> loginWithGoogle() async {
+    try {
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser != null) {
+        final googleAuthCredentials = await googleUser.authentication;
+        final AuthCredential credentials = GoogleAuthProvider.credential(
+            idToken: googleAuthCredentials.idToken,
+            accessToken: googleAuthCredentials.accessToken);
+        final UserCredential credentail =
+            await FirebaseAuth.instance.signInWithCredential(credentials);
+      }
+    } on FirebaseAuthException catch (e) {
+      log("google sign in error");
+    }
   }
 }
