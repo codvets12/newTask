@@ -21,6 +21,8 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final formGlobalkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -111,15 +113,20 @@ class _SignupScreenState extends State<SignupScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
                           child: TextFormField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.email),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.grey, width: 0.5)),
-                                hintText: 'Email Address',
-                                contentPadding: EdgeInsets.all(8)),
-                          ),
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.email),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.grey, width: 0.5)),
+                                  hintText: 'Email Address',
+                                  contentPadding: EdgeInsets.all(8)),
+                              validator: (val) {
+                                if (emailRegex.hasMatch(val!)) {
+                                  return "email is incorrect";
+                                }
+                                return null;
+                              }),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -134,6 +141,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                         color: Colors.grey, width: 0.5)),
                                 contentPadding: EdgeInsets.all(8),
                                 hintText: 'Password'),
+                            validator: (val) {
+                              if (val!.length < 6) {
+                                return "password is short";
+                              }
+                              return null;
+                            },
                           ),
                         ),
                         Padding(

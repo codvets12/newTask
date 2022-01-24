@@ -26,6 +26,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:new_project1/Routes/routes.dart';
+import 'package:new_project1/model/data_model.dart';
 import 'package:new_project1/network/network.dart';
 import 'package:new_project1/widgets/auth_widget/login.dart';
 
@@ -73,8 +74,8 @@ class AuthProvider with ChangeNotifier {
       await firebaseAuth.login(password: password, email: email);
       Navigator.pushNamedAndRemoveUntil(
           context, Routes.investmentscreen, (route) => false);
-    } on FirebaseException catch (e) {
-      log("Error login");
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -98,5 +99,14 @@ class AuthProvider with ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       log("google sign in error");
     }
+  }
+
+  Future<void> upLoadData(
+    BuildContext context, {
+    required String value,
+    required String AccountName,
+  }) async {
+    Data data = Data(AccountName: AccountName, value: value);
+    await firebaseAuth.upLoadData(data);
   }
 }

@@ -17,8 +17,10 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
+  final emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   TextEditingController passwordController = TextEditingController();
 
@@ -121,11 +123,11 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                           color: Colors.grey, width: 0.5)),
                                   hintText: 'Email Address',
                                   contentPadding: EdgeInsets.all(8)),
-                              validator: (email) {
-                                if (isEmailValid(email!))
-                                  return null;
-                                else
-                                  "Enter a valid email";
+                              validator: (val) {
+                                if (!emailRegex.hasMatch(val!)) {
+                                  return "invalid email";
+                                }
+                                return null;
                               }),
                         ),
                         Padding(
@@ -140,11 +142,11 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                         color: Colors.grey, width: 0.5)),
                                 contentPadding: EdgeInsets.all(8),
                                 hintText: 'Password'),
-                            validator: (password) {
-                              if (isPasswordValid(password!))
-                                return null;
-                              else
-                                "Your password in incorrect";
+                            validator: (val) {
+                              if (val!.length < 6) {
+                                return "password is short";
+                              }
+                              return null;
                             },
                           ),
                         ),
@@ -194,14 +196,6 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
   }
 }
 
-mixin InputValidationMixin {
-  bool isPasswordValid(String password) => password.length >= 6;
-  bool isEmailValid(String email) {
-    final reg = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    return reg.hasMatch(email);
-  }
-}
 showAlertaDialog(BuildContext context) {
   AlertDialog alert = AlertDialog(
     content: new Row(
